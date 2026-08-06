@@ -1,0 +1,1322 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>JavaScript Fundamentals — Week 1 Assessment</title>
+<style>
+  :root {
+    --bg: #FAF8F3;
+    --surface: #FFFFFF;
+    --surface-2: #F3EFE5;
+    --ink: #1C1A16;
+    --muted: #6B6559;
+    --rule: #E3DDCF;
+    --rule-strong: #CFC7B4;
+    --accent: #9A6A08;
+    --accent-ink: #FFFFFF;
+    --accent-soft: #F7EDD8;
+    --ok: #2C7350;
+    --ok-soft: #E4F1E9;
+    --bad: #AC3722;
+    --bad-soft: #F8E7E3;
+    --warn: #8A6000;
+    --shadow: 0 1px 2px rgba(28,26,22,.05), 0 8px 24px -16px rgba(28,26,22,.35);
+
+    --serif: Cambria, Georgia, "Times New Roman", serif;
+    --sans: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", sans-serif;
+    --mono: "Cascadia Mono", Consolas, ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1A1815;
+      --surface: #222019;
+      --surface-2: #2B2820;
+      --ink: #EDE7D9;
+      --muted: #9C9484;
+      --rule: #38332B;
+      --rule-strong: #4A443A;
+      --accent: #E0AE4A;
+      --accent-ink: #241C08;
+      --accent-soft: #33291A;
+      --ok: #6BCB93;
+      --ok-soft: #1E3128;
+      --bad: #EE8067;
+      --bad-soft: #37211C;
+      --warn: #D9AC55;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -16px rgba(0,0,0,.8);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #1A1815; --surface: #222019; --surface-2: #2B2820; --ink: #EDE7D9;
+    --muted: #9C9484; --rule: #38332B; --rule-strong: #4A443A; --accent: #E0AE4A;
+    --accent-ink: #241C08; --accent-soft: #33291A; --ok: #6BCB93; --ok-soft: #1E3128;
+    --bad: #EE8067; --bad-soft: #37211C; --warn: #D9AC55;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -16px rgba(0,0,0,.8);
+  }
+  :root[data-theme="light"] {
+    --bg: #FAF8F3; --surface: #FFFFFF; --surface-2: #F3EFE5; --ink: #1C1A16;
+    --muted: #6B6559; --rule: #E3DDCF; --rule-strong: #CFC7B4; --accent: #9A6A08;
+    --accent-ink: #FFFFFF; --accent-soft: #F7EDD8; --ok: #2C7350; --ok-soft: #E4F1E9;
+    --bad: #AC3722; --bad-soft: #F8E7E3; --warn: #8A6000;
+    --shadow: 0 1px 2px rgba(28,26,22,.05), 0 8px 24px -16px rgba(28,26,22,.35);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 { font-family: var(--serif); font-weight: 600; text-wrap: balance; margin: 0; }
+  p { margin: 0; }
+  button { font-family: inherit; font-size: inherit; cursor: pointer; }
+  code, pre, textarea { font-family: var(--mono); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+
+  /* ---------- top bar ---------- */
+  .bar {
+    position: sticky; top: 0; z-index: 40;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--rule);
+  }
+  .bar-in {
+    max-width: 1000px; margin: 0 auto; padding: 10px 22px;
+    display: flex; align-items: center; gap: 18px;
+  }
+  .brand { font-family: var(--serif); font-size: 15px; letter-spacing: .01em; white-space: nowrap; }
+  .brand span { color: var(--muted); }
+  .bar-stats { margin-left: auto; display: flex; align-items: center; gap: 16px; }
+  .stat { font-family: var(--mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .stat b { color: var(--ink); font-weight: 600; }
+  .flagdot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--ok); margin-right: 6px; vertical-align: 1px; }
+  .flagdot.hot { background: var(--bad); }
+  .track { height: 3px; background: var(--rule); }
+  .track > i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .3s ease; }
+
+  /* ---------- layout ---------- */
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 0 22px 120px; }
+  .col { max-width: 720px; }
+  .hide { display: none !important; }
+
+  /* ---------- start screen ---------- */
+  .cover { padding: 64px 0 40px; }
+  .eyebrow {
+    font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 14px;
+  }
+  .cover h1 { font-size: clamp(30px, 5vw, 44px); line-height: 1.1; letter-spacing: -.01em; }
+  .cover .lede { margin-top: 14px; color: var(--muted); font-size: 17px; max-width: 58ch; }
+  .rules { margin-top: 30px; border-top: 1px solid var(--rule); }
+  .rule-row { display: flex; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--rule); align-items: baseline; }
+  .rule-row .k { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); flex: 0 0 116px; }
+  .rule-row .v { flex: 1; font-size: 15px; }
+  .namebox { margin-top: 32px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  input[type="text"] {
+    font-family: var(--sans); font-size: 16px; color: var(--ink);
+    background: var(--surface); border: 1px solid var(--rule-strong); border-radius: 4px;
+    padding: 11px 14px; min-width: 260px;
+  }
+  .btn {
+    background: var(--accent); color: var(--accent-ink); border: 1px solid transparent;
+    padding: 11px 20px; border-radius: 4px; font-weight: 600; font-size: 15px;
+  }
+  .btn:hover { filter: brightness(1.08); }
+  .btn.ghost { background: transparent; color: var(--ink); border-color: var(--rule-strong); font-weight: 500; }
+  .btn.ghost:hover { background: var(--surface-2); filter: none; }
+  .btn.sm { padding: 7px 13px; font-size: 13px; }
+  .btn:disabled { opacity: .45; cursor: not-allowed; filter: none; }
+
+  /* ---------- sections ---------- */
+  .section { padding-top: 52px; }
+  .section-head { display: flex; align-items: baseline; gap: 14px; border-bottom: 2px solid var(--ink); padding-bottom: 8px; margin-bottom: 4px; }
+  .section-head h2 { font-size: 22px; }
+  .section-head .count { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: .08em; }
+
+  .q { display: flex; gap: 18px; padding: 26px 0; border-bottom: 1px solid var(--rule); }
+  .q-num { flex: 0 0 34px; font-family: var(--mono); font-size: 12px; color: var(--muted); padding-top: 4px; font-variant-numeric: tabular-nums; }
+  .q-body { flex: 1; min-width: 0; }
+  .q-ask { font-family: var(--serif); font-size: 18px; line-height: 1.45; }
+  pre.code {
+    background: var(--surface-2); border: 1px solid var(--rule); border-left: 2px solid var(--accent);
+    border-radius: 3px; padding: 12px 14px; margin: 14px 0 0; overflow-x: auto;
+    font-size: 13.5px; line-height: 1.6; white-space: pre;
+  }
+  .opts { margin-top: 14px; display: flex; flex-direction: column; gap: 2px; }
+  .opt {
+    display: flex; gap: 11px; align-items: flex-start; padding: 9px 12px; border-radius: 4px;
+    cursor: pointer; border: 1px solid transparent; transition: background .12s;
+  }
+  .opt:hover { background: var(--surface-2); }
+  .opt input { margin: 5px 0 0; accent-color: var(--accent); flex: 0 0 auto; }
+  .opt .txt { font-size: 15px; }
+  .opt .txt code { background: var(--surface-2); padding: 1px 5px; border-radius: 3px; font-size: 13px; }
+  .opt.chosen { background: var(--accent-soft); }
+  .opt.chosen .txt code { background: color-mix(in srgb, var(--ink) 8%, transparent); }
+
+  /* ---------- code exercises ---------- */
+  .ex { padding: 30px 0; border-bottom: 1px solid var(--rule); }
+  .ex-head { display: flex; align-items: baseline; gap: 12px; }
+  .ex-head .q-num { flex: 0 0 34px; }
+  .ex h3 { font-size: 19px; }
+  .tag { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--rule-strong); border-radius: 99px; padding: 2px 8px; }
+  .ex-body { margin-left: 52px; }
+  @media (max-width: 640px) { .ex-body { margin-left: 0; } .q { gap: 10px; } .q-num { flex-basis: 26px; } }
+  .ex-brief { margin-top: 10px; font-size: 15px; color: var(--ink); max-width: 66ch; }
+  .ex-brief ul { margin: 8px 0 0; padding-left: 20px; color: var(--muted); }
+  .ex-brief li { margin: 3px 0; }
+  .ex-brief code { font-family: var(--mono); font-size: 13px; background: var(--surface-2); padding: 1px 5px; border-radius: 3px; }
+  .editor-shell { margin-top: 14px; border: 1px solid var(--rule-strong); border-radius: 5px; overflow: hidden; background: var(--surface); box-shadow: var(--shadow); }
+  .editor-top { display: flex; align-items: center; gap: 10px; padding: 7px 12px; background: var(--surface-2); border-bottom: 1px solid var(--rule); }
+  .editor-top .file { font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
+  .editor-top .right { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+  textarea.editor {
+    display: block; width: 100%; min-height: 190px; resize: vertical; border: 0; outline: none;
+    padding: 14px; font-size: 13.5px; line-height: 1.65; background: var(--surface); color: var(--ink);
+    tab-size: 2; white-space: pre; overflow-wrap: normal; overflow-x: auto;
+  }
+  .out { border-top: 1px solid var(--rule); background: var(--surface-2); padding: 0; }
+  .out-head { font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); padding: 8px 12px 4px; }
+  .out-body { padding: 0 12px 12px; font-family: var(--mono); font-size: 12.5px; line-height: 1.7; white-space: pre-wrap; word-break: break-word; }
+  .logline { color: var(--muted); }
+  .case { display: flex; gap: 9px; align-items: baseline; padding: 2px 0; }
+  .case .mark { flex: 0 0 auto; font-weight: 700; }
+  .case.pass .mark { color: var(--ok); }
+  .case.fail .mark { color: var(--bad); }
+  .case .detail { color: var(--muted); }
+  .err { color: var(--bad); }
+  .score-pill { font-family: var(--mono); font-size: 11px; padding: 3px 9px; border-radius: 99px; background: var(--surface); border: 1px solid var(--rule-strong); color: var(--muted); }
+  .score-pill.good { background: var(--ok-soft); border-color: transparent; color: var(--ok); }
+  .score-pill.bad { background: var(--bad-soft); border-color: transparent; color: var(--bad); }
+
+  /* ---------- dom lab ---------- */
+  .stage {
+    margin-top: 14px; border: 1px dashed var(--rule-strong); border-radius: 5px; padding: 18px;
+    background: var(--surface); display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+  }
+  .stage p { font-size: 15px; }
+  .stage button {
+    background: var(--surface-2); border: 1px solid var(--rule-strong); color: var(--ink);
+    padding: 7px 14px; border-radius: 4px; font-size: 14px;
+  }
+  .stage .counter { font-family: var(--mono); font-weight: 700; font-size: 17px; color: var(--accent); }
+
+  /* ---------- submit ---------- */
+  .submit-zone { margin-top: 56px; padding: 28px; border: 1px solid var(--rule-strong); border-radius: 6px; background: var(--surface); box-shadow: var(--shadow); }
+  .submit-zone h3 { font-size: 20px; }
+  .submit-zone p { color: var(--muted); margin-top: 8px; font-size: 15px; }
+  .submit-row { margin-top: 18px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+
+  /* ---------- report ---------- */
+  .report-head { padding: 56px 0 0; }
+  .grade { display: flex; gap: 40px; align-items: flex-end; flex-wrap: wrap; margin-top: 20px; }
+  .grade .big { font-family: var(--mono); font-size: 68px; font-weight: 700; line-height: .9; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+  .grade .big span { font-size: 24px; color: var(--muted); font-weight: 400; }
+  .verdict { font-family: var(--serif); font-size: 20px; }
+  .verdict small { display: block; font-family: var(--sans); font-size: 14px; color: var(--muted); margin-top: 4px; }
+  .bars { margin-top: 34px; display: grid; gap: 9px; }
+  .bar-row { display: grid; grid-template-columns: 150px 1fr 62px; gap: 12px; align-items: center; font-size: 13.5px; }
+  .bar-row .lbl { color: var(--muted); }
+  .bar-row .meter { height: 8px; background: var(--surface-2); border-radius: 99px; overflow: hidden; }
+  .bar-row .meter i { display: block; height: 100%; background: var(--accent); border-radius: 99px; }
+  .bar-row .meter i.low { background: var(--bad); }
+  .bar-row .meter i.mid { background: var(--warn); }
+  .bar-row .val { font-family: var(--mono); font-size: 12px; text-align: right; font-variant-numeric: tabular-nums; }
+  .integrity { margin-top: 34px; border: 1px solid var(--rule-strong); border-radius: 6px; overflow: hidden; }
+  .integrity .ih { padding: 12px 16px; background: var(--surface-2); font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--rule); }
+  .integrity .ib { padding: 14px 16px; font-family: var(--mono); font-size: 12.5px; line-height: 1.9; }
+  .integrity .ib div { color: var(--muted); }
+  .handover {
+    margin-top: 30px; padding: 24px 26px; border-radius: 6px;
+    background: var(--surface); border: 1px solid var(--rule-strong); box-shadow: var(--shadow);
+  }
+  .flagbar {
+    margin-top: 22px; padding: 14px 18px; border-radius: 5px;
+    background: var(--bad-soft); border-left: 3px solid var(--bad); color: var(--bad);
+    font-size: 15px; font-weight: 600;
+  }
+  .review { margin-top: 40px; }
+  .rev-item { padding: 16px 0; border-bottom: 1px solid var(--rule); display: flex; gap: 14px; }
+  .rev-item .rn { font-family: var(--mono); font-size: 12px; color: var(--muted); flex: 0 0 34px; }
+  .rev-item .rb { flex: 1; min-width: 0; }
+  .rev-item .rq { font-family: var(--serif); font-size: 16px; }
+  .rev-line { font-size: 13.5px; margin-top: 6px; font-family: var(--mono); }
+  .rev-line.yours { color: var(--bad); }
+  .rev-line.right { color: var(--ok); }
+  .rev-why { font-size: 14px; color: var(--muted); margin-top: 6px; max-width: 66ch; }
+  /* ---------- away warning ---------- */
+  .shield {
+    position: fixed; inset: 0; z-index: 100; display: none;
+    align-items: center; justify-content: center; padding: 24px;
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: blur(14px);
+  }
+  .shield.up { display: flex; }
+  .shield-card {
+    max-width: 520px; width: 100%; background: var(--surface);
+    border: 1px solid var(--bad); border-top: 4px solid var(--bad);
+    border-radius: 6px; padding: 30px 32px; box-shadow: 0 24px 60px -20px rgba(0,0,0,.5);
+  }
+  .shield-card .eyebrow { color: var(--bad); }
+  .shield-card h2 { font-size: 26px; line-height: 1.2; }
+  .shield-card p { margin-top: 12px; font-size: 15.5px; color: var(--muted); }
+  .shield-card p b { color: var(--ink); }
+  .shield-facts {
+    margin-top: 20px; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+    padding: 12px 0; display: grid; gap: 6px;
+    font-family: var(--mono); font-size: 12.5px; color: var(--muted);
+  }
+  .shield-facts b { color: var(--bad); font-weight: 700; }
+  .shield-card .btn { margin-top: 22px; }
+  .strike { animation: pulse 1.6s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 28px; transform: translate(-50%, 16px);
+    background: var(--ink); color: var(--bg); padding: 11px 18px; border-radius: 5px;
+    font-size: 14px; opacity: 0; pointer-events: none; transition: all .25s ease; z-index: 90; max-width: 90vw;
+  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+  textarea.dump { width: 100%; min-height: 220px; margin-top: 14px; font-size: 12px; padding: 12px; border: 1px solid var(--rule-strong); border-radius: 5px; background: var(--surface); color: var(--ink); }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <div class="bar-in">
+    <div class="brand">JavaScript Fundamentals <span>&middot; Week 1 Assessment</span></div>
+    <div class="bar-stats" id="barStats">
+      <div class="stat" id="statCand"></div>
+      <div class="stat">answered <b id="statAns">0</b>/<span id="statTotal">15</span></div>
+      <div class="stat" id="statTime">00:00</div>
+      <div class="stat" id="statFlags"><span class="flagdot" id="flagDot"></span><b id="flagN">0</b> flags</div>
+    </div>
+  </div>
+  <div class="track"><i id="trackFill"></i></div>
+</div>
+
+<div class="wrap">
+
+  <!-- START -->
+  <section id="screenStart" class="col cover">
+    <div class="eyebrow">Internal training &middot; 6 August 2026</div>
+    <h1>Show me what you learned this week.</h1>
+    <p class="lede">Fifteen questions across the nine topics from Monday's brief: variables, operators, conditionals, loops,
+      functions, arrays &amp; objects, ES6, the DOM, and events. Twelve are multiple choice. Three are short pieces of code you
+      write and run right here — the editor checks your answer against test cases, exactly like a compiler would.</p>
+
+    <div class="rules">
+      <div class="rule-row"><div class="k">Time</div><div class="v">No hard limit, but aim for 30 minutes. The clock is recorded.</div></div>
+      <div class="rule-row"><div class="k">Screen share</div><div class="v">Share your <b>entire screen</b> (not just this tab) in the meeting before you press Begin.</div></div>
+      <div class="rule-row"><div class="k">Pasting</div><div class="v">Paste is disabled in the code editors. Type your answers. Attempts are logged.</div></div>
+      <div class="rule-row"><div class="k">Leaving the page</div><div class="v">If you switch to another tab, window or app, the assessment <b>stops and warns you</b>. Every trip away is timestamped on your result sheet. Four or more and your paper is flagged.</div></div>
+      <div class="rule-row"><div class="k">Running code</div><div class="v">Press <b>Run &amp; test</b> as often as you like — partial credit is given per passing test case.</div></div>
+      <div class="rule-row"><div class="k">Submitting</div><div class="v">Your score appears immediately. Copy the result summary and send it to your reviewer in chat.</div></div>
+    </div>
+
+    <div class="namebox">
+      <input type="text" id="candName" placeholder="Type your full name" autocomplete="off" spellcheck="false" />
+      <button class="btn" id="beginBtn">Begin assessment</button>
+    </div>
+    <p class="stat" id="resumeNote" style="margin-top:14px"></p>
+  </section>
+
+  <!-- EXAM -->
+  <main id="screenExam" class="hide">
+    <div id="mcqMount"></div>
+
+    <section class="section" id="codeSection">
+      <div class="section-head">
+        <h2>Write the code</h2>
+        <div class="count">2 exercises &middot; 12 points each</div>
+      </div>
+      <p class="stat" style="padding:14px 0 0">Define the function exactly as named. Press <b>Run &amp; test</b> to check it. <code>console.log</code> works and prints below the editor.</p>
+      <div id="exMount"></div>
+    </section>
+
+    <section class="section" id="labSection">
+      <div class="section-head">
+        <h2>DOM &amp; events lab</h2>
+        <div class="count">1 exercise &middot; 16 points</div>
+      </div>
+      <div id="labMount"></div>
+    </section>
+
+    <div class="submit-zone">
+      <h3>Finished?</h3>
+      <p id="submitHint">Answer everything you can before submitting. Once you submit, the paper locks and your score is shown.</p>
+      <div class="submit-row">
+        <button class="btn" id="submitBtn">Submit &amp; see my score</button>
+        <span class="stat" id="submitStat"></span>
+      </div>
+    </div>
+  </main>
+
+  <!-- REPORT -->
+  <section id="screenReport" class="hide">
+    <div class="report-head col">
+      <div class="eyebrow" id="repEyebrow">Result sheet</div>
+      <h1 id="repName">—</h1>
+      <div class="grade">
+        <div class="big" id="repScore">0<span>/100</span></div>
+        <div class="verdict" id="repVerdict">—<small id="repSub"></small></div>
+      </div>
+      <div id="repFlag"></div>
+      <div class="bars" id="repBars"></div>
+      <div class="integrity">
+        <div class="ih">Session record</div>
+        <div class="ib" id="repIntegrity"></div>
+      </div>
+      <div class="handover">
+        <div class="eyebrow" style="margin-bottom:8px">Handing in</div>
+        <p id="sendStatus" style="font-size:15px;margin-bottom:6px"></p>
+        <p style="color:var(--muted);font-size:14.5px;margin-bottom:16px">Whatever it says above, also email or download your result while your screen is still shared.</p>
+        <div class="submit-row">
+          <button class="btn" id="mailBtn">Email result to reviewer</button>
+          <button class="btn ghost" id="downloadBtn">Download result file</button>
+          <button class="btn ghost" id="copyBtn">Copy summary</button>
+          <button class="btn ghost" id="printBtn">Save as PDF</button>
+          <button class="btn ghost" id="showTextBtn">Show as text</button>
+        </div>
+      </div>
+      <textarea class="dump hide" id="dumpBox" readonly></textarea>
+    </div>
+    <div class="review col" id="repReview"></div>
+  </section>
+</div>
+
+<div class="shield" id="shield">
+  <div class="shield-card">
+    <div class="eyebrow">Assessment paused</div>
+    <h2 id="shieldTitle">You left the assessment page.</h2>
+    <p id="shieldMsg">Everything you do outside this page is recorded. Stay on this tab until you have submitted.</p>
+    <div class="shield-facts">
+      <div>Time away this trip &nbsp; <b id="shieldSecs">0s</b></div>
+      <div>Times you have left &nbsp; <b id="shieldCount">1</b></div>
+      <div id="shieldEsc"></div>
+    </div>
+    <button class="btn" id="shieldBtn">I understand — resume</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* =========================================================
+     QUESTION BANK
+     ========================================================= */
+  var MCQ = [
+    // --- Variables & Data Types ---
+    { topic: "Variables & Data Types",
+      ask: "What does this print?",
+      code: "let score;\nconsole.log(score);",
+      opts: ["null", "0", "undefined", "ReferenceError"], answer: 2,
+      why: "A variable that is declared but never assigned holds undefined. null is a value you assign on purpose; undefined is what JavaScript gives you." },
+    { topic: "Variables & Data Types",
+      ask: "Which one of these is a primitive value?",
+      code: "",
+      opts: ["[1, 2, 3]", "{ id: 1 }", "\"hello\"", "function () {}"], answer: 2,
+      why: "The primitives are string, number, boolean, null, undefined, bigint and symbol. Arrays, objects and functions are all objects." },
+
+    // --- Operators ---
+    { topic: "Operators",
+      ask: "What are the two printed values?",
+      code: "console.log(\"5\" + 3);\nconsole.log(\"5\" - 3);",
+      opts: ["53  then  2", "8  then  2", "53  then  53", "8  then  8"], answer: 0,
+      why: "+ is overloaded: if either side is a string it concatenates, so \"5\" + 3 is the string \"53\". - has no string meaning, so \"5\" is converted to the number 5 and you get 2." },
+
+    // --- Conditional Statements ---
+    { topic: "Conditional Statements",
+      ask: "What does this print?",
+      code: "const n = 15;\nif (n > 10) {\n  console.log(\"big\");\n} else if (n > 5) {\n  console.log(\"medium\");\n} else {\n  console.log(\"small\");\n}",
+      opts: ["big", "big  then  medium", "medium", "big  then  medium  then  small"], answer: 0,
+      why: "Only the first matching branch of an if / else if / else chain runs. Once \"big\" matches, the rest of the chain is skipped entirely." },
+
+    // --- Loops ---
+    { topic: "Loops",
+      ask: "What does this print, in order?",
+      code: "for (let i = 1; i <= 3; i++) {\n  console.log(i * 2);\n}",
+      opts: ["2, 4, 6", "1, 2, 3", "2, 4, 6, 8", "6"], answer: 0,
+      why: "The loop runs with i equal to 1, then 2, then 3, printing i * 2 each time. It stops as soon as i <= 3 is no longer true." },
+
+    // --- Functions ---
+    { topic: "Functions",
+      ask: "What does this print?",
+      code: "function total(items) {\n  const sum = items.length;\n}\nconsole.log(total([1, 2, 3]));",
+      opts: ["3", "undefined", "null", "0"], answer: 1,
+      why: "A function with no return statement returns undefined. Computing a value inside the function is not the same as handing it back to the caller." },
+
+    // --- Arrays & Objects ---
+    { topic: "Arrays & Objects",
+      ask: "What are the two printed values?",
+      code: "const nums = [10, 20, 30];\nconsole.log(nums.length);\nconsole.log(nums[0]);",
+      opts: ["3  then  10", "3  then  20", "2  then  10", "30  then  10"], answer: 0,
+      why: "length counts the items, so it is 3. Indexes start at 0, so nums[0] is the first item, 10 — nums[3] would be undefined." },
+    { topic: "Arrays & Objects",
+      ask: "What are the two printed values?",
+      code: "const user = { name: \"Derrick\" };\nconsole.log(user.age);\nconsole.log(Object.keys(user).length);",
+      opts: ["null  then  1", "undefined  then  1", "undefined  then  0", "TypeError  then  1"], answer: 1,
+      why: "Reading a property that does not exist gives undefined rather than an error. Object.keys returns [\"name\"], so its length is 1." },
+
+    // --- ES6 ---
+    { topic: "ES6 Features",
+      ask: "Which line correctly builds the string using a template literal?",
+      code: "const name = \"Amrutha\";",
+      opts: ["const msg = \"Welcome ${name}\";", "const msg = 'Welcome ' + ${name};", "const msg = `Welcome ${name}`;", "const msg = `Welcome $(name)`;"], answer: 2,
+      why: "Template literals need backticks, not quotes, and the placeholder is ${ } with curly braces. Inside normal quotes ${name} is just literal text." },
+    { topic: "ES6 Features",
+      ask: "Which arrow function does exactly the same thing as  n => n * 2 ?",
+      code: "",
+      opts: ["n => { n * 2 }", "n => { return n * 2; }", "(n) { return n * 2 }", "function (n) { n * 2 }"], answer: 1,
+      why: "An arrow with no braces returns its expression implicitly. The moment you add braces you have a normal body and must write return yourself." },
+
+    // --- DOM & Events ---
+    { topic: "DOM & Events",
+      ask: "Which call returns the first element with class \"card\" — and nothing else?",
+      code: "",
+      opts: ["document.getElementsByClassName(\".card\")", "document.querySelector(\".card\")", "document.querySelectorAll(\".card\")", "document.getElementById(\"card\")"], answer: 1,
+      why: "querySelector takes a CSS selector and returns the first match, or null. querySelectorAll returns all of them as a list, and getElementsByClassName takes a bare class name with no dot." },
+    { topic: "DOM & Events",
+      ask: "Which line runs the function sayHi every time the button is clicked?",
+      code: "const btn = document.querySelector(\"#save\");",
+      opts: ["btn.addEventListener(\"click\", sayHi);", "btn.addEventListener(\"click\", sayHi());", "btn.click(sayHi);", "btn.onEvent(\"click\", sayHi);"], answer: 0,
+      why: "You pass the function itself, with no brackets. Writing sayHi() calls it immediately and hands the result to addEventListener instead of the function." }
+  ];
+
+  var EXERCISES = [
+    { topic: "Functions & ES6",
+      fn: "greet",
+      title: "Say hello",
+      brief: "Write a function <code>greet(name)</code> that <b>returns</b> the string <code>\"Hello, Amrutha!\"</code> when you pass it <code>\"Amrutha\"</code>. Build the string with a template literal.",
+      hints: ["Backticks, not quotes: <code>`Hello, ${name}!`</code>", "Use <code>return</code> — do not use <code>console.log</code> for the answer."],
+      starter: "function greet(name) {\n  // your code here\n}\n",
+      cases: [
+        { args: ["Amrutha"], expect: "Hello, Amrutha!" },
+        { args: ["Derrick"], expect: "Hello, Derrick!" },
+        { args: [""], expect: "Hello, !", note: "empty name" }
+      ] },
+
+    { topic: "Loops & Conditionals",
+      fn: "sumEven",
+      title: "Add up the even numbers",
+      brief: "Write a function <code>sumEven(numbers)</code> that returns the sum of every even number in the array. Return 0 if there are none.",
+      hints: ["A number is even when <code>n % 2 === 0</code>.", "Negative numbers can be even too."],
+      starter: "function sumEven(numbers) {\n  // your code here\n}\n",
+      cases: [
+        { args: [[1, 2, 3, 4, 5, 6]], expect: 12 },
+        { args: [[7, 7, 7]], expect: 0, note: "no even numbers" },
+        { args: [[]], expect: 0, note: "empty array" }
+      ] },
+
+  ];
+
+  var LAB = {
+    fn: "(DOM lab)",
+    title: "Wire up a click counter",
+    brief: "The panel below is real HTML sitting in this page. Using the variable <code>root</code> (the panel element), make the <b>Add one</b> button increase the number by 1 on every click, and make <b>Reset</b> set it back to 0.",
+    hints: [
+      "The number lives in <code>root.querySelector(\"#count\")</code>, the buttons are <code>#add</code> and <code>#reset</code>.",
+      "<code>addEventListener(\"click\", ...)</code> is how you listen.",
+      "<code>textContent</code> is always a string — <code>Number(...)</code> turns it back into a number."
+    ],
+    starter: "// root is the panel element. Do not use document — start from root.\nconst count = root.querySelector(\"#count\");\nconst addBtn = root.querySelector(\"#add\");\nconst resetBtn = root.querySelector(\"#reset\");\n\n// your code here\n",
+    stage: '<p>Clicks: <span class="counter" id="count">0</span></p><button id="add" type="button">Add one</button><button id="reset" type="button">Reset</button>',
+    checks: [
+      { label: "three clicks on Add one show 3", clicks: ["add", "add", "add"], expect: "3" },
+      { label: "Reset returns it to 0", clicks: ["add", "add", "reset"], expect: "0" },
+      { label: "counting still works after a reset", clicks: ["add", "reset", "add"], expect: "1" }
+    ]
+  };
+
+  var MCQ_POINTS = 5, EX_POINTS = 12, LAB_POINTS = 16;
+
+  /* ---------------------------------------------------------
+     ADMIN SETTINGS — edit these two lines only.
+     SUBMIT_URL: paste your Google Apps Script Web App URL here
+     and every submission lands in your Google Sheet automatically.
+     Leave it empty ("") and the candidate emails you the result instead.
+     Setup steps are in README.md.
+     --------------------------------------------------------- */
+  var SUBMIT_URL = "";
+  var REVIEWER_EMAIL = "claude_1@coremodules.tech";
+  var TOPICS = ["Variables & Data Types", "Operators", "Conditional Statements", "Loops", "Functions", "Arrays & Objects", "ES6 Features", "DOM & Events"];
+  var STORE_KEY = "js-week1-assessment-v1";
+
+  /* =========================================================
+     STATE
+     ========================================================= */
+  var state = {
+    name: "", started: 0, submitted: false,
+    mcq: {}, code: {}, best: {}, runs: {},
+    flags: [], blurCount: 0, pasteCount: 0
+  };
+
+  function save() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {}
+  }
+  function load() {
+    try {
+      var raw = localStorage.getItem(STORE_KEY);
+      if (!raw) return null;
+      return JSON.parse(raw);
+    } catch (e) { return null; }
+  }
+
+  var $ = function (id) { return document.getElementById(id); };
+  function esc(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+  function toast(msg) {
+    var t = $("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(t._h);
+    t._h = setTimeout(function () { t.classList.remove("show"); }, 2600);
+  }
+  function mmss(ms) {
+    var s = Math.floor(ms / 1000);
+    var m = Math.floor(s / 60);
+    return String(m).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0");
+  }
+
+  /* =========================================================
+     RUNNING USER CODE
+     Try Function() first; fall back to a script tag if a
+     content policy blocks it.
+     ========================================================= */
+  function build(paramNames, body) {
+    var src = "(function(" + paramNames.join(",") + "){\n\"use strict\";\n" + body + "\n})";
+    try {
+      return { ok: true, fn: new Function("return " + src)() };
+    } catch (e) {
+      if (e instanceof SyntaxError) return { ok: false, error: e.name + ": " + e.message };
+      try {
+        window.__jsq_slot = null;
+        var s = document.createElement("script");
+        s.textContent = "window.__jsq_slot = " + src + ";";
+        document.head.appendChild(s);
+        s.parentNode.removeChild(s);
+        if (typeof window.__jsq_slot === "function") return { ok: true, fn: window.__jsq_slot };
+      } catch (e2) {}
+      return { ok: false, error: "This browser blocked the code runner. Open the page as a local .html file to run code." };
+    }
+  }
+
+  function show(v, depth) {
+    depth = depth || 0;
+    if (typeof v === "string") return depth === 0 ? v : JSON.stringify(v);
+    if (v === undefined) return "undefined";
+    if (v === null) return "null";
+    if (typeof v === "function") return "[Function]";
+    if (typeof v === "number" || typeof v === "boolean") return String(v);
+    try { return JSON.stringify(v); } catch (e) { return String(v); }
+  }
+  function arg(v) { return typeof v === "string" ? JSON.stringify(v) : show(v, 1); }
+
+  function normalise(v) {
+    if (Array.isArray(v)) return v.map(normalise);
+    if (v && typeof v === "object") {
+      var out = {};
+      Object.keys(v).sort().forEach(function (k) { out[k] = normalise(v[k]); });
+      return out;
+    }
+    if (typeof v === "number" && Number.isNaN(v)) return "__NaN__";
+    return v;
+  }
+  function same(a, b) {
+    if (typeof a !== typeof b) return false;
+    try { return JSON.stringify(normalise(a)) === JSON.stringify(normalise(b)); } catch (e) { return false; }
+  }
+
+  function runExercise(ex, code) {
+    var logs = [];
+    var fakeConsole = {
+      log: function () { logs.push(Array.prototype.map.call(arguments, function (a) { return show(a, 1); }).join(" ")); },
+      error: function () { logs.push("Error: " + Array.prototype.map.call(arguments, function (a) { return show(a, 1); }).join(" ")); },
+      warn: function () { logs.push("Warning: " + Array.prototype.map.call(arguments, function (a) { return show(a, 1); }).join(" ")); },
+      info: function () { logs.push(Array.prototype.map.call(arguments, function (a) { return show(a, 1); }).join(" ")); }
+    };
+
+    var built = build(["console"], code + "\n;return typeof " + ex.fn + " === \"function\" ? " + ex.fn + " : null;");
+    if (!built.ok) return { fatal: built.error, logs: logs };
+
+    var target;
+    try { target = built.fn(fakeConsole); }
+    catch (e) { return { fatal: e.name + ": " + e.message, logs: logs }; }
+    if (typeof target !== "function") {
+      return { fatal: "No function named " + ex.fn + " was found. Check the spelling — it must be exactly " + ex.fn + ".", logs: logs };
+    }
+
+    var results = ex.cases.map(function (c) {
+      var call = ex.fn + "(" + c.args.map(arg).join(", ") + ")";
+      try {
+        var got = target.apply(null, JSON.parse(JSON.stringify(c.args)));
+        return { call: call, note: c.note, pass: same(got, c.expect), got: show(got, 1), want: show(c.expect, 1) };
+      } catch (e) {
+        return { call: call, note: c.note, pass: false, got: e.name + ": " + e.message, want: show(c.expect, 1), threw: true };
+      }
+    });
+    return { logs: logs, results: results };
+  }
+
+  function runLab(code, stageEl) {
+    var logs = [];
+    var fakeConsole = { log: function () { logs.push(Array.prototype.map.call(arguments, function (a) { return show(a, 1); }).join(" ")); } };
+    fakeConsole.error = fakeConsole.log; fakeConsole.warn = fakeConsole.log; fakeConsole.info = fakeConsole.log;
+
+    var results = [];
+    for (var i = 0; i < LAB.checks.length; i++) {
+      var check = LAB.checks[i];
+      stageEl.innerHTML = LAB.stage;                 // fresh markup, no stacked listeners
+      var built = build(["console", "root"], code);
+      if (!built.ok) return { fatal: built.error, logs: logs };
+      try { built.fn(fakeConsole, stageEl); }
+      catch (e) { return { fatal: e.name + ": " + e.message, logs: logs }; }
+
+      try {
+        check.clicks.forEach(function (id) {
+          var b = stageEl.querySelector("#" + id);
+          if (!b) throw new Error("button #" + id + " is missing");
+          b.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true }));
+        });
+        var node = stageEl.querySelector("#count");
+        var got = node ? node.textContent.trim() : "(no #count element)";
+        results.push({ call: check.label, pass: got === check.expect, got: got, want: check.expect });
+      } catch (e) {
+        results.push({ call: check.label, pass: false, got: e.name + ": " + e.message, want: check.expect, threw: true });
+      }
+    }
+    stageEl.innerHTML = LAB.stage;
+    var live = build(["console", "root"], code);
+    if (live.ok) { try { live.fn(fakeConsole, stageEl); } catch (e) {} }
+    return { logs: logs, results: results };
+  }
+
+  /* =========================================================
+     RENDER — multiple choice
+     ========================================================= */
+  function renderMCQ() {
+    var mount = $("mcqMount");
+    var html = "";
+    var n = 0;
+    TOPICS.forEach(function (topic) {
+      var group = [];
+      MCQ.forEach(function (q, i) { if (q.topic === topic) group.push({ q: q, i: i }); });
+      if (!group.length) return;
+      html += '<section class="section"><div class="section-head"><h2>' + esc(topic) + '</h2>' +
+              '<div class="count">' + group.length + " questions &middot; " + MCQ_POINTS + " points each</div></div>";
+      group.forEach(function (item) {
+        n++;
+        var q = item.q, id = "m" + item.i;
+        html += '<div class="q" id="q-' + id + '"><div class="q-num">' + String(n).padStart(2, "0") + '</div><div class="q-body">' +
+                '<div class="q-ask">' + esc(q.ask) + "</div>";
+        if (q.code) html += '<pre class="code">' + esc(q.code) + "</pre>";
+        html += '<div class="opts">';
+        q.opts.forEach(function (o, oi) {
+          html += '<label class="opt" data-q="' + id + '" data-o="' + oi + '">' +
+                  '<input type="radio" name="' + id + '" value="' + oi + '" />' +
+                  '<span class="txt"><code>' + esc(o) + "</code></span></label>";
+        });
+        html += "</div></div></div>";
+      });
+      html += "</section>";
+    });
+    mount.innerHTML = html;
+
+    mount.addEventListener("change", function (e) {
+      var input = e.target;
+      if (input.type !== "radio") return;
+      if (state.submitted) { input.checked = false; return; }
+      var label = input.closest(".opt");
+      var qid = label.getAttribute("data-q");
+      state.mcq[qid] = Number(label.getAttribute("data-o"));
+      Array.prototype.forEach.call(mount.querySelectorAll('.opt[data-q="' + qid + '"]'), function (el) { el.classList.remove("chosen"); });
+      label.classList.add("chosen");
+      save(); refreshStats();
+    });
+  }
+
+  /* =========================================================
+     RENDER — code exercises
+     ========================================================= */
+  function editorBlock(key, starter, extra) {
+    return '<div class="editor-shell">' +
+      '<div class="editor-top"><span class="file">' + esc(extra.file) + '</span>' +
+      '<span class="right"><span class="score-pill" id="pill-' + key + '">not run yet</span>' +
+      '<button class="btn sm" data-run="' + key + '">Run &amp; test</button>' +
+      '<button class="btn sm ghost" data-reset="' + key + '">Reset</button></span></div>' +
+      '<textarea class="editor" id="ed-' + key + '" spellcheck="false" autocomplete="off" autocapitalize="off">' + esc(starter) + "</textarea>" +
+      '<div class="out"><div class="out-head">Output</div><div class="out-body" id="out-' + key + '"><span class="logline">Press Run &amp; test to check your code.</span></div></div>' +
+      "</div>";
+  }
+
+  function renderExercises() {
+    var mount = $("exMount");
+    var html = "";
+    EXERCISES.forEach(function (ex, i) {
+      var key = "e" + i;
+      var num = MCQ.length + i + 1;
+      html += '<div class="ex" id="q-' + key + '">' +
+        '<div class="ex-head"><div class="q-num">' + String(num).padStart(2, "0") + "</div>" +
+        "<h3>" + esc(ex.title) + '</h3><span class="tag">' + esc(ex.topic) + "</span></div>" +
+        '<div class="ex-body"><div class="ex-brief">' + ex.brief +
+        "<ul>" + ex.hints.map(function (h) { return "<li>" + h + "</li>"; }).join("") + "</ul></div>" +
+        editorBlock(key, ex.starter, { file: ex.fn + ".js" }) + "</div></div>";
+    });
+    mount.innerHTML = html;
+  }
+
+  function renderLab() {
+    var key = "lab";
+    var num = MCQ.length + EXERCISES.length + 1;
+    $("labMount").innerHTML = '<div class="ex" id="q-lab" style="border-bottom:0">' +
+      '<div class="ex-head"><div class="q-num">' + num + "</div><h3>" + esc(LAB.title) + '</h3><span class="tag">DOM &amp; Events</span></div>' +
+      '<div class="ex-body"><div class="ex-brief">' + LAB.brief +
+      "<ul>" + LAB.hints.map(function (h) { return "<li>" + h + "</li>"; }).join("") + "</ul></div>" +
+      '<div class="stage" id="labStage">' + LAB.stage + "</div>" +
+      editorBlock(key, LAB.starter, { file: "counter.js" }) + "</div></div>";
+  }
+
+  /* =========================================================
+     EDITOR BEHAVIOUR
+     ========================================================= */
+  function wireEditors() {
+    var keys = EXERCISES.map(function (_, i) { return "e" + i; }).concat(["lab"]);
+    keys.forEach(function (key) {
+      var ta = $("ed-" + key);
+      if (state.code[key] != null) ta.value = state.code[key];
+
+      ta.addEventListener("input", function () {
+        if (state.submitted) return;
+        state.code[key] = ta.value;
+        save(); refreshStats();
+      });
+      ta.addEventListener("keydown", function (e) {
+        if (e.key === "Tab") {
+          e.preventDefault();
+          var s = ta.selectionStart, en = ta.selectionEnd;
+          ta.value = ta.value.slice(0, s) + "  " + ta.value.slice(en);
+          ta.selectionStart = ta.selectionEnd = s + 2;
+          state.code[key] = ta.value; save();
+        }
+      });
+      ta.addEventListener("paste", function (e) {
+        e.preventDefault();
+        state.pasteCount++;
+        flag("paste blocked in " + key);
+        toast("Pasting is disabled — please type your answer.");
+        save(); refreshStats();
+      });
+      ta.addEventListener("drop", function (e) {
+        e.preventDefault();
+        state.pasteCount++;
+        flag("drop blocked in " + key);
+        toast("Dropping text in is disabled — please type your answer.");
+        save(); refreshStats();
+      });
+    });
+
+    document.addEventListener("click", function (e) {
+      var runKey = e.target.getAttribute && e.target.getAttribute("data-run");
+      var resetKey = e.target.getAttribute && e.target.getAttribute("data-reset");
+      if (runKey) { doRun(runKey); return; }
+      if (resetKey) {
+        if (state.submitted) return;
+        var starter = resetKey === "lab" ? LAB.starter : EXERCISES[Number(resetKey.slice(1))].starter;
+        $("ed-" + resetKey).value = starter;
+        state.code[resetKey] = starter;
+        save(); refreshStats();
+      }
+    });
+  }
+
+  function doRun(key) {
+    var code = $("ed-" + key).value;
+    var outEl = $("out-" + key), pill = $("pill-" + key);
+    state.runs[key] = (state.runs[key] || 0) + 1;
+
+    var res = key === "lab" ? runLab(code, $("labStage")) : runExercise(EXERCISES[Number(key.slice(1))], code);
+    var html = "";
+    if (res.logs && res.logs.length) {
+      html += res.logs.map(function (l) { return '<div class="logline">&rsaquo; ' + esc(l) + "</div>"; }).join("");
+      html += '<div style="height:8px"></div>';
+    }
+    if (res.fatal) {
+      html += '<div class="err">' + esc(res.fatal) + "</div>";
+      outEl.innerHTML = html;
+      pill.textContent = "did not run"; pill.className = "score-pill bad";
+      state.best[key] = state.best[key] || 0;
+      save(); refreshStats();
+      return;
+    }
+
+    var passed = 0;
+    res.results.forEach(function (r) {
+      if (r.pass) passed++;
+      html += '<div class="case ' + (r.pass ? "pass" : "fail") + '"><span class="mark">' + (r.pass ? "PASS" : "FAIL") + "</span>" +
+        "<span>" + esc(r.call) + (r.note ? ' <span class="detail">(' + esc(r.note) + ")</span>" : "") +
+        (r.pass ? "" : '<br /><span class="detail">expected ' + esc(r.want) + " &nbsp;&middot;&nbsp; got " + esc(r.got) + "</span>") +
+        "</span></div>";
+    });
+    outEl.innerHTML = html;
+
+    var total = res.results.length;
+    var points = Math.round((key === "lab" ? LAB_POINTS : EX_POINTS) * passed / total);
+    state.best[key] = Math.max(state.best[key] || 0, points);
+    pill.textContent = passed + "/" + total + " tests · " + points + " pts";
+    pill.className = "score-pill " + (passed === total ? "good" : (passed === 0 ? "bad" : ""));
+    save(); refreshStats();
+  }
+
+  /* =========================================================
+     INTEGRITY WATCH
+     ========================================================= */
+  function flag(what) {
+    if (!state.started || state.submitted) return;
+    state.flags.push({ at: mmss(Date.now() - state.started), what: what });
+    save();
+  }
+  var away = false, awayAt = 0, blurTimer = null;
+
+  function active() { return state.started && !state.submitted; }
+
+  function beep() {
+    try {
+      var Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return;
+      var ctx = beep._ctx || (beep._ctx = new Ctx());
+      if (ctx.state === "suspended") ctx.resume();
+      [0, 0.22].forEach(function (offset) {
+        var osc = ctx.createOscillator(), gain = ctx.createGain();
+        osc.type = "square";
+        osc.frequency.value = 880;
+        gain.gain.setValueAtTime(0.0001, ctx.currentTime + offset);
+        gain.gain.exponentialRampToValueAtTime(0.12, ctx.currentTime + offset + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + offset + 0.18);
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.start(ctx.currentTime + offset);
+        osc.stop(ctx.currentTime + offset + 0.2);
+      });
+    } catch (e) {}
+  }
+
+  function goAway(reason) {
+    if (away || !active()) return;
+    away = true;
+    awayAt = Date.now();
+    state.blurCount++;
+    flag(reason);
+    document.title = "!! RETURN TO THE ASSESSMENT !!";
+    beep();
+    save(); refreshStats();
+  }
+
+  function comeBack() {
+    if (!away) return;
+    away = false;
+    var secs = Math.max(1, Math.round((Date.now() - awayAt) / 1000));
+    flag("came back after " + secs + "s");
+    document.title = "JavaScript Fundamentals — Week 1 Assessment";
+    raiseShield(secs);
+    save(); refreshStats();
+  }
+
+  function raiseShield(secs) {
+    var n = state.blurCount;
+    $("shieldSecs").textContent = secs + "s";
+    $("shieldCount").textContent = n;
+
+    if (n === 1) {
+      $("shieldTitle").textContent = "You left the assessment page.";
+      $("shieldMsg").innerHTML = "This is your <b>first warning</b>. Everything you do outside this page is recorded and shown to your reviewer on the result sheet. Stay on this tab until you have submitted.";
+      $("shieldEsc").innerHTML = "";
+    } else if (n < 4) {
+      $("shieldTitle").textContent = "You left again.";
+      $("shieldMsg").innerHTML = "That is <b>" + n + " times</b> now. Each one is timestamped in your session record. If you need help, ask your reviewer in the meeting — do not go looking for answers.";
+      $("shieldEsc").innerHTML = 'Next one is flagged for review &nbsp; <b class="strike">warning ' + n + " of 3</b>";
+    } else {
+      $("shieldTitle").textContent = "Your paper is flagged.";
+      $("shieldMsg").innerHTML = "You have left this page <b>" + n + " times</b>. Your result sheet will show this at the top and your reviewer will be asked to check the recording of your screen share.";
+      $("shieldEsc").innerHTML = '<b class="strike">FLAGGED FOR REVIEW</b>';
+    }
+    $("shield").classList.add("up");
+    setTimeout(function () { $("shieldBtn").focus(); }, 60);
+  }
+
+  function wireWatch() {
+    $("shieldBtn").addEventListener("click", function () { $("shield").classList.remove("up"); });
+
+    document.addEventListener("visibilitychange", function () {
+      if (!active()) return;
+      if (document.hidden) goAway("switched away from the assessment tab");
+      else if (document.hasFocus()) comeBack();
+    });
+
+    window.addEventListener("blur", function () {
+      if (!active()) return;
+      clearTimeout(blurTimer);
+      blurTimer = setTimeout(function () {
+        if (!document.hasFocus() && !document.hidden) goAway("moved to another window or app");
+      }, 350);
+    });
+
+    window.addEventListener("focus", function () {
+      clearTimeout(blurTimer);
+      if (active() && !document.hidden) comeBack();
+    });
+
+    window.addEventListener("beforeunload", function (e) {
+      if (active()) { e.preventDefault(); e.returnValue = ""; }
+    });
+  }
+
+  /* =========================================================
+     STATS BAR
+     ========================================================= */
+  function answeredCount() {
+    var n = Object.keys(state.mcq).length;
+    EXERCISES.forEach(function (ex, i) {
+      var k = "e" + i;
+      if (state.code[k] && state.code[k].trim() !== ex.starter.trim()) n++;
+    });
+    if (state.code.lab && state.code.lab.trim() !== LAB.starter.trim()) n++;
+    return n;
+  }
+  function refreshStats() {
+    var total = MCQ.length + EXERCISES.length + 1;
+    var done = answeredCount();
+    $("statAns").textContent = done;
+    $("statTotal").textContent = total;
+    $("trackFill").style.width = (done / total * 100) + "%";
+    var flags = state.blurCount + state.pasteCount;
+    $("flagN").textContent = flags;
+    $("flagDot").className = "flagdot" + (flags > 0 ? " hot" : "");
+    $("statCand").textContent = state.name ? state.name : "";
+    $("submitStat").textContent = done + " of " + total + " answered";
+  }
+  function tick() {
+    if (state.started && !state.submitted) $("statTime").textContent = mmss(Date.now() - state.started);
+  }
+
+  /* =========================================================
+     SCORING & REPORT
+     ========================================================= */
+  function grade() {
+    var perTopic = {};
+    TOPICS.forEach(function (t) { perTopic[t] = { got: 0, max: 0 }; });
+    perTopic["Code exercises"] = { got: 0, max: EXERCISES.length * EX_POINTS };
+    perTopic["DOM lab"] = { got: 0, max: LAB_POINTS };
+
+    var wrong = [], score = 0;
+    MCQ.forEach(function (q, i) {
+      var key = "m" + i;
+      var chosen = state.mcq[key];
+      perTopic[q.topic].max += MCQ_POINTS;
+      if (chosen === q.answer) { score += MCQ_POINTS; perTopic[q.topic].got += MCQ_POINTS; }
+      else {
+        wrong.push({ n: i + 1, ask: q.ask, code: q.code,
+          yours: chosen == null ? "(left blank)" : q.opts[chosen],
+          right: q.opts[q.answer], why: q.why });
+      }
+    });
+    EXERCISES.forEach(function (ex, i) {
+      var p = state.best["e" + i] || 0;
+      score += p; perTopic["Code exercises"].got += p;
+    });
+    var labPts = state.best.lab || 0;
+    score += labPts; perTopic["DOM lab"].got += labPts;
+
+    return { score: score, perTopic: perTopic, wrong: wrong };
+  }
+
+  function summaryText(g) {
+    var lines = [];
+    lines.push("JAVASCRIPT FUNDAMENTALS — WEEK 1 ASSESSMENT");
+    lines.push("Candidate : " + state.name);
+    lines.push("Score     : " + g.score + " / 100");
+    lines.push("Time taken: " + mmss((state.submittedAt || Date.now()) - state.started));
+    lines.push("");
+    lines.push("BY TOPIC");
+    Object.keys(g.perTopic).forEach(function (t) {
+      var r = g.perTopic[t];
+      lines.push("  " + (t + "                          ").slice(0, 26) + r.got + "/" + r.max);
+    });
+    lines.push("");
+    lines.push("SESSION RECORD");
+    lines.push("  Tab / window switches : " + state.blurCount);
+    lines.push("  Paste attempts blocked: " + state.pasteCount);
+    lines.push("  Test runs used        : " + Object.keys(state.runs).reduce(function (a, k) { return a + state.runs[k]; }, 0));
+    if (state.flags.length) {
+      lines.push("  Event log:");
+      state.flags.forEach(function (f) { lines.push("    [" + f.at + "] " + f.what); });
+    }
+    lines.push("");
+    lines.push("MISSED QUESTIONS (" + g.wrong.length + ")");
+    g.wrong.forEach(function (w) {
+      lines.push("  Q" + w.n + " — answered: " + w.yours + "  |  correct: " + w.right);
+    });
+    lines.push("");
+    lines.push("CODE SUBMITTED");
+    EXERCISES.forEach(function (ex, i) {
+      lines.push("");
+      lines.push("--- " + ex.fn + " (" + (state.best["e" + i] || 0) + "/" + EX_POINTS + ") ---");
+      lines.push((state.code["e" + i] || "(not attempted)").trim());
+    });
+    lines.push("");
+    lines.push("--- DOM lab (" + (state.best.lab || 0) + "/" + LAB_POINTS + ") ---");
+    lines.push((state.code.lab || "(not attempted)").trim());
+    return lines.join("\n");
+  }
+
+  function buildPayload(g) {
+    var answers = MCQ.map(function (q, i) {
+      var chosen = state.mcq["m" + i];
+      return {
+        n: i + 1,
+        topic: q.topic,
+        question: q.ask + (q.code ? "  [" + q.code.replace(/\n/g, " ") + "]" : ""),
+        answered: chosen == null ? "(blank)" : q.opts[chosen],
+        correct: q.opts[q.answer],
+        isCorrect: chosen === q.answer
+      };
+    });
+    var codeAnswers = EXERCISES.map(function (ex, i) {
+      return { name: ex.fn, points: (state.best["e" + i] || 0) + "/" + EX_POINTS, code: state.code["e" + i] || "(not attempted)" };
+    });
+    codeAnswers.push({ name: "DOM lab", points: (state.best.lab || 0) + "/" + LAB_POINTS, code: state.code.lab || "(not attempted)" });
+
+    var topics = {};
+    Object.keys(g.perTopic).forEach(function (t) { topics[t] = g.perTopic[t].got + "/" + g.perTopic[t].max; });
+
+    return {
+      candidate: state.name,
+      score: g.score,
+      outOf: 100,
+      submittedAt: new Date().toISOString(),
+      timeTaken: mmss(state.submittedAt - state.started),
+      flagged: state.blurCount >= 4 || state.pasteCount >= 3,
+      pageSwitches: state.blurCount,
+      pasteAttempts: state.pasteCount,
+      testRuns: Object.keys(state.runs).reduce(function (a, k) { return a + state.runs[k]; }, 0),
+      eventLog: state.flags.map(function (f) { return "[" + f.at + "] " + f.what; }).join(" | "),
+      correctCount: answers.filter(function (a) { return a.isCorrect; }).length,
+      topics: topics,
+      answers: answers,
+      codeAnswers: codeAnswers
+    };
+  }
+
+  function sendResult(g, statusEl) {
+    if (!SUBMIT_URL) {
+      statusEl.innerHTML = '<span style="color:var(--muted)">Automatic delivery is switched off. Use the buttons below to send your result.</span>';
+      return;
+    }
+    statusEl.innerHTML = '<span style="color:var(--muted)">Sending your result to the reviewer&hellip;</span>';
+    try {
+      fetch(SUBMIT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(buildPayload(g))
+      }).then(function () {
+        statusEl.innerHTML = '<span style="color:var(--ok);font-weight:600">&check; Sent. Your reviewer has your answers, score and session record.</span>';
+      }).catch(function () {
+        statusEl.innerHTML = '<span style="color:var(--bad);font-weight:600">Could not send automatically — email or download your result below and send it yourself.</span>';
+      });
+    } catch (e) {
+      statusEl.innerHTML = '<span style="color:var(--bad);font-weight:600">Could not send automatically — email or download your result below.</span>';
+    }
+  }
+
+  function renderReport() {
+    var g = grade();
+    $("screenExam").classList.add("hide");
+    $("screenStart").classList.add("hide");
+    $("screenReport").classList.remove("hide");
+    window.scrollTo(0, 0);
+
+    $("repName").textContent = state.name || "Candidate";
+    var flagged = state.blurCount >= 4 || state.pasteCount >= 3;
+    $("repEyebrow").innerHTML = flagged
+      ? '<span style="color:var(--bad)">Flagged for review</span> &middot; ' + state.blurCount + " trips away, " + state.pasteCount + " paste attempts &middot; submitted in " + mmss(state.submittedAt - state.started)
+      : "Result sheet &middot; submitted in " + mmss(state.submittedAt - state.started);
+    $("repScore").innerHTML = g.score + "<span>/100</span>";
+
+    var verdict, sub;
+    if (g.score >= 85) { verdict = "Strong grasp of the fundamentals."; sub = "Ready for the next session with no gaps to patch first."; }
+    else if (g.score >= 70) { verdict = "Solid, with a few soft spots."; sub = "Review the missed questions below before Monday."; }
+    else if (g.score >= 50) { verdict = "The basics are there, the details are not."; sub = "Rework the topics scoring under half and re-attempt the code exercises."; }
+    else { verdict = "Needs another pass over the material."; sub = "Go back through the nine topics with hands-on practice, then retake this."; }
+    $("repVerdict").firstChild.textContent = verdict;
+    $("repSub").textContent = sub;
+
+    $("repFlag").innerHTML = flagged
+      ? '<div class="flagbar">This paper is flagged: the candidate left the assessment page ' + state.blurCount +
+        " time" + (state.blurCount === 1 ? "" : "s") + " and attempted to paste " + state.pasteCount +
+        " time" + (state.pasteCount === 1 ? "" : "s") + ". Check the screen-share recording before accepting the score.</div>"
+      : "";
+
+    var bars = "";
+    Object.keys(g.perTopic).forEach(function (t) {
+      var r = g.perTopic[t];
+      var pct = r.max ? Math.round(r.got / r.max * 100) : 0;
+      var cls = pct < 50 ? "low" : (pct < 75 ? "mid" : "");
+      bars += '<div class="bar-row"><div class="lbl">' + esc(t) + '</div>' +
+              '<div class="meter"><i class="' + cls + '" style="width:' + pct + '%"></i></div>' +
+              '<div class="val">' + r.got + "/" + r.max + "</div></div>";
+    });
+    $("repBars").innerHTML = bars;
+
+    var totalRuns = Object.keys(state.runs).reduce(function (a, k) { return a + state.runs[k]; }, 0);
+    var ilines = "<div>Tab or window switches &nbsp;<b>" + state.blurCount + "</b></div>" +
+                 "<div>Paste attempts blocked &nbsp;<b>" + state.pasteCount + "</b></div>" +
+                 "<div>Test runs used &nbsp;<b>" + totalRuns + "</b></div>";
+    if (state.flags.length) {
+      ilines += '<div style="margin-top:8px">Event log</div>';
+      state.flags.forEach(function (f) { ilines += "<div>&nbsp;&nbsp;[" + f.at + "] " + esc(f.what) + "</div>"; });
+    } else {
+      ilines += '<div style="margin-top:8px">No interruptions recorded.</div>';
+    }
+    $("repIntegrity").innerHTML = ilines;
+
+    var rev = "<h2 style=\"font-size:22px;border-bottom:2px solid var(--ink);padding-bottom:8px\">What you missed (" + g.wrong.length + ")</h2>";
+    if (!g.wrong.length) rev += '<p style="padding:18px 0;color:var(--muted)">Every multiple choice question correct. Well done.</p>';
+    g.wrong.forEach(function (w) {
+      rev += '<div class="rev-item"><div class="rn">' + String(w.n).padStart(2, "0") + '</div><div class="rb">' +
+        '<div class="rq">' + esc(w.ask) + "</div>" +
+        (w.code ? '<pre class="code">' + esc(w.code) + "</pre>" : "") +
+        '<div class="rev-line yours">your answer &nbsp; ' + esc(w.yours) + "</div>" +
+        '<div class="rev-line right">correct &nbsp;&nbsp;&nbsp;&nbsp; ' + esc(w.right) + "</div>" +
+        '<div class="rev-why">' + esc(w.why) + "</div></div></div>";
+    });
+    $("repReview").innerHTML = rev;
+
+    sendResult(g, $("sendStatus"));
+
+    var text = summaryText(g);
+    $("dumpBox").value = text;
+
+    var safeName = (state.name || "candidate").replace(/[^a-z0-9]+/gi, "-").toLowerCase();
+    var subject = "JS assessment result — " + (state.name || "candidate") + " — " + g.score + "/100" + (flagged ? " — FLAGGED" : "");
+    var brief = text.split("CODE SUBMITTED")[0].trim() +
+      "\n\n(Full code answers are in the downloaded result file and on the candidate's screen.)";
+
+    $("mailBtn").onclick = function () {
+      var href = "mailto:" + encodeURIComponent(REVIEWER_EMAIL) +
+                 "?subject=" + encodeURIComponent(subject) +
+                 "&body=" + encodeURIComponent(brief.slice(0, 1600));
+      window.open(href, "_blank");
+      toast("Your email app should open. If nothing happens, use Download or Copy instead.");
+    };
+
+    $("downloadBtn").onclick = function () {
+      try {
+        var blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "js-assessment-" + safeName + "-" + g.score + "of100.txt";
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+        toast("Saved to your Downloads folder — send that file to your reviewer.");
+      } catch (e) {
+        revealDump();
+      }
+    };
+
+    $("copyBtn").onclick = function () {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(
+          function () { toast("Result summary copied — paste it to your reviewer."); },
+          function () { revealDump(); }
+        );
+      } else revealDump();
+    };
+    $("showTextBtn").onclick = revealDump;
+    $("printBtn").onclick = function () { window.print(); };
+    function revealDump() {
+      $("dumpBox").classList.remove("hide");
+      $("dumpBox").select();
+      toast("Select all and copy this text manually.");
+    }
+  }
+
+  /* =========================================================
+     FLOW
+     ========================================================= */
+  function begin() {
+    var name = $("candName").value.trim();
+    if (name.length < 2) { toast("Please type your full name first."); $("candName").focus(); return; }
+    state.name = name;
+    if (!state.started) state.started = Date.now();
+    $("screenStart").classList.add("hide");
+    $("screenExam").classList.remove("hide");
+    save(); refreshStats();
+    window.scrollTo(0, 0);
+  }
+
+  function submit() {
+    var total = MCQ.length + EXERCISES.length + 1;
+    var done = answeredCount();
+    var msg = done < total
+      ? "You have answered " + done + " of " + total + ". Anything left blank scores zero. Submit anyway?"
+      : "Submit your paper? You will not be able to change your answers.";
+    if (!window.confirm(msg)) return;
+    state.submitted = true;
+    state.submittedAt = Date.now();
+    save();
+    renderReport();
+  }
+
+  function init() {
+    renderMCQ();
+    renderExercises();
+    renderLab();
+    wireEditors();
+    wireWatch();
+
+    var saved = load();
+    if (saved && !saved.submitted && saved.started) {
+      state = Object.assign(state, saved);
+      $("candName").value = state.name || "";
+      Object.keys(state.mcq).forEach(function (k) {
+        var el = document.querySelector('.opt[data-q="' + k + '"][data-o="' + state.mcq[k] + '"]');
+        if (el) { el.classList.add("chosen"); el.querySelector("input").checked = true; }
+      });
+      Object.keys(state.code).forEach(function (k) {
+        var ta = $("ed-" + k); if (ta) ta.value = state.code[k];
+      });
+      Object.keys(state.best).forEach(function (k) {
+        var pill = $("pill-" + k);
+        if (pill && state.best[k] != null) {
+          pill.textContent = state.best[k] + " pts saved";
+          pill.className = "score-pill" + (state.best[k] > 0 ? " good" : "");
+        }
+      });
+      $("resumeNote").textContent = "An unfinished attempt by " + (state.name || "you") + " was found on this computer. Press Begin to carry on where you left off.";
+    } else if (saved && saved.submitted) {
+      try { localStorage.removeItem(STORE_KEY); } catch (e) {}
+    }
+
+    $("beginBtn").addEventListener("click", begin);
+    $("candName").addEventListener("keydown", function (e) { if (e.key === "Enter") begin(); });
+    $("submitBtn").addEventListener("click", submit);
+    refreshStats();
+    setInterval(tick, 1000);
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
